@@ -1,0 +1,16 @@
+**
+!Dockerfile
+!package.json
+!package-lock.json
+!index.html
+!tsconfig*.json
+!vite.config.ts
+!playwright.config.ts
+!src
+!src/**
+!tests
+!tests/**
+!public
+!public/**
+!docker
+!docker/nginx.conf

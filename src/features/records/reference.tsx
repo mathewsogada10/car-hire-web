@@ -1,0 +1,45 @@
+import { Notice } from "../../components/notice";
+import { schemas } from "./schemas";
+import { label } from "./record-label";
+import { useReference } from "./hooks/use-reference";
+
+export function Reference({
+  kind,
+  value,
+  onChange,
+  required,
+}: {
+  kind: string;
+  value: string;
+  onChange: (value: string) => void;
+  required: boolean;
+}) {
+  const { query, setQuery, rows, error } = useReference(kind);
+  return (
+    <div className="reference">
+      <input
+        aria-label={`Search ${schemas[kind].title}`}
+        placeholder={`Search ${schemas[kind].title.toLowerCase()}`}
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+      />
+      <select
+        aria-label={`Choose ${schemas[kind].title}`}
+        value={value}
+        required={required}
+        onChange={(e) => onChange(e.target.value)}
+      >
+        <option value="">Choose a record</option>
+        {value && !rows.some((r) => r.id === value) && (
+          <option value={value}>{value}</option>
+        )}
+        {rows.map((r) => (
+          <option key={r.id} value={r.id}>
+            {label(r)}
+          </option>
+        ))}
+      </select>
+      <Notice error={error} />
+    </div>
+  );
+}
