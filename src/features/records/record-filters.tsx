@@ -1,4 +1,5 @@
 import type { useEntityRecords } from "./hooks/use-entity-records";
+import { schemas } from "./schemas";
 
 type FilterProps = Pick<
   ReturnType<typeof useEntityRecords>,
@@ -24,6 +25,8 @@ export function RecordFilters({
   setStatus,
   setPage,
 }: FilterProps) {
+  const statuses =
+    schemas[kind].fields.find((field) => field.key === "status")?.options ?? [];
   return (
     <div className="filters">
       <label>
@@ -70,17 +73,30 @@ export function RecordFilters({
           </label>
         </>
       )}
-      <label>
-        Status
-        <input
-          value={status}
-          onChange={(e) => {
-            setStatus(e.target.value);
-            setPage(0);
-          }}
-          placeholder="All statuses"
-        />
-      </label>
+      {(statuses.length > 0 || status) && (
+        <label>
+          Status
+          <select
+            value={status}
+            onChange={(e) => {
+              setStatus(e.target.value);
+              setPage(0);
+            }}
+          >
+            <option value="">All statuses</option>
+            {status && !statuses.includes(status) && (
+              <option value={status} disabled>
+                Unsupported status: {status} - select a defined status
+              </option>
+            )}
+            {statuses.map((value) => (
+              <option key={value} value={value}>
+                {value}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
     </div>
   );
 }

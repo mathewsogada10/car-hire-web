@@ -63,8 +63,6 @@ export function App({
               <Evidence audit />
             ) : view === "sync" ? (
               <Evidence />
-            ) : view === "calendar" ? (
-              <EntityPage key="calendar" kind="hires" calendar />
             ) : view === "settings" ? (
               <SettingsPage appearance={appearance} />
             ) : schemas[view] ? (

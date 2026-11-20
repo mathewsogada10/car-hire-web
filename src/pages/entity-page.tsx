@@ -6,13 +6,7 @@ import { DeleteRecordDialog } from "../features/records/delete-record-dialog";
 import { useEntityRecords } from "../features/records/hooks/use-entity-records";
 import { schemas } from "../features/records/schemas";
 
-export function EntityPage({
-  kind,
-  calendar = false,
-}: {
-  kind: string;
-  calendar?: boolean;
-}) {
+export function EntityPage({ kind }: { kind: string }) {
   const records = useEntityRecords(kind);
   const {
     query,
@@ -54,7 +48,10 @@ export function EntityPage({
       <div className="section-head">
         <div>
           <p className="eyebrow">OWNER WORKSPACE</p>
-          <h1>{calendar ? "Hire calendar" : schemas[kind].title}</h1>
+          <h1>{schemas[kind].title}</h1>
+          {kind === "hires" && (
+            <p>Ordered by planned pickup (earliest first)</p>
+          )}
         </div>
         <button onClick={() => setEditing("new")}>
           + Add {kind === "hires" ? "hire" : "record"}
@@ -84,7 +81,6 @@ export function EntityPage({
         <RecordsTable
           kind={kind}
           rows={rows}
-          calendar={calendar}
           onEdit={setEditing}
           onDelete={setDeleting}
         />

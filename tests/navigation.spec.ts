@@ -22,6 +22,7 @@ test("phone menu reaches every section and keeps sign out visible", async ({
   );
   const nav = menu.getByRole("navigation", { name: "Main navigation" });
   const titles = await nav.getByRole("button").allTextContents();
+  expect(titles).not.toContain("Calendar");
   expect(titles).toEqual(
     expect.arrayContaining([
       "Customers",

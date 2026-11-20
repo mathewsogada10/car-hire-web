@@ -7,13 +7,11 @@ import { schemas } from "./schemas";
 export function RecordsTable({
   kind,
   rows,
-  calendar,
   onEdit,
   onDelete,
 }: {
   kind: string;
   rows: Row[];
-  calendar: boolean;
   onEdit: (row: Row) => void;
   onDelete: (row: Row) => void;
 }) {
@@ -30,11 +28,6 @@ export function RecordsTable({
         ].includes(f.key),
     )
     .slice(0, 6);
-  const ordered = calendar
-    ? [...rows].sort((a, b) =>
-        String(a.data.plannedStart).localeCompare(String(b.data.plannedStart)),
-      )
-    : rows;
 
   return (
     <>
@@ -58,7 +51,7 @@ export function RecordsTable({
             </tr>
           </thead>
           <tbody>
-            {ordered.map((row) => (
+            {rows.map((row) => (
               <tr key={row.id}>
                 {fields.map((f) => (
                   <td key={f.key}>
