@@ -71,9 +71,12 @@ test("Hires uses defined statuses, combines filters and preserves pickup orderin
   for (const value of statuses) {
     await status.selectOption(value);
     await expect(rows).toHaveCount(1);
-    await expect(
-      rows.getByRole("cell", { name: value, exact: true }),
-    ).toBeVisible();
+    await expect(rows.locator("td:nth-child(2)")).toContainText(
+      `${statuses.indexOf(value) + 1}00.00`,
+    );
+    await expect(page.getByTestId("filtered-total")).toContainText(
+      `${statuses.indexOf(value) + 1}00.00`,
+    );
     await expect
       .poll(() => new URL(page.url()).searchParams.get("status"))
       .toBe(value);

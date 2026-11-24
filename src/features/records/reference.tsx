@@ -14,7 +14,10 @@ export function Reference({
   onChange: (value: string) => void;
   required: boolean;
 }) {
-  const { query, setQuery, rows, error } = useReference(kind);
+  const { query, setQuery, rows, references, selected, error } = useReference(
+    kind,
+    value,
+  );
   return (
     <div className="reference">
       <input
@@ -31,11 +34,15 @@ export function Reference({
       >
         <option value="">Choose a record</option>
         {value && !rows.some((r) => r.id === value) && (
-          <option value={value}>{value}</option>
+          <option value={value}>
+            {selected
+              ? label(selected, references)
+              : "Loading selected record..."}
+          </option>
         )}
         {rows.map((r) => (
           <option key={r.id} value={r.id}>
-            {label(r)}
+            {label(r, references)}
           </option>
         ))}
       </select>

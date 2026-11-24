@@ -10,6 +10,8 @@ export function useEntityRecords(kind: string) {
   const [status, setStatus] = useState(initial.get("status") ?? "");
   const [page, setPage] = useState(0);
   const [rows, setRows] = useState<Row[]>([]);
+  const [references, setReferences] = useState<Row[]>([]);
+  const [amountTotalMinor, setAmountTotalMinor] = useState(0);
   const [total, setTotal] = useState(0);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -44,6 +46,8 @@ export function useEntityRecords(kind: string) {
         .then((result) => {
           if (active) {
             setRows(result.items);
+            setReferences(result.references);
+            setAmountTotalMinor(result.amountTotalMinor);
             setTotal(result.total);
             setError("");
             if (kind === "settings") setEditing(result.items[0] ?? "new");
@@ -91,6 +95,8 @@ export function useEntityRecords(kind: string) {
     page,
     setPage,
     rows,
+    references,
+    amountTotalMinor,
     total,
     error,
     loading,

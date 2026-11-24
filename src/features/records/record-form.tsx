@@ -39,7 +39,24 @@ export function RecordForm({
         </p>
       )}
       <form onSubmit={submit}>
-        <RecordFields kind={kind} values={values} setValues={setValues} />
+        {schemas[kind].fields.some((f) => f.type === "instant") && (
+          <p>
+            Date/time entries use your timezone:{" "}
+            {Intl.DateTimeFormat().resolvedOptions().timeZone}.
+          </p>
+        )}
+        {kind === "payments" && (
+          <p>
+            Saving fills missing actual hire pickup/return times from the
+            planned times. Existing actual times and hire status are unchanged.
+          </p>
+        )}
+        <RecordFields
+          kind={kind}
+          values={values}
+          setValues={setValues}
+          original={row?.data}
+        />
         <Notice error={error} />
         {detail != null && (
           <details open>

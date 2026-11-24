@@ -42,16 +42,28 @@ test("creates vehicle and customer, completes hire and reconciles cash vs revenu
     .getByLabel("Choose Customers", { exact: true })
     .selectOption({ label: `Customer ${suffix}` });
   await page
-    .getByLabel("Planned pickup (Nairobi)", { exact: true })
+    .getByLabel("Planned pickup (local time)", { exact: true })
     .fill("2026-01-01T10:00");
   await page
-    .getByLabel("Planned return (Nairobi)", { exact: true })
+    .getByLabel("Planned return (local time)", { exact: true })
     .fill("2026-01-03T10:00");
+  await expect(page.getByLabel("Number of days", { exact: true })).toHaveValue(
+    "2",
+  );
+  await expect(
+    page.getByLabel("Number of days", { exact: true }),
+  ).toHaveAttribute("readonly", "");
+  await expect(
+    page.getByLabel("Actual pickup (local time) (optional)", { exact: true }),
+  ).toHaveValue("2026-01-01T10:00");
+  await expect(
+    page.getByLabel("Actual return (local time) (optional)", { exact: true }),
+  ).toHaveValue("2026-01-03T10:00");
   await page
-    .getByLabel("Actual pickup (Nairobi) (optional)", { exact: true })
+    .getByLabel("Actual pickup (local time) (optional)", { exact: true })
     .fill("2026-01-01T10:00");
   await page
-    .getByLabel("Actual return (Nairobi) (optional)", { exact: true })
+    .getByLabel("Actual return (local time) (optional)", { exact: true })
     .fill("2026-01-03T10:00");
   await page.getByLabel("Agreed charge (KES)", { exact: true }).fill("40000");
   await page.getByLabel("Status", { exact: true }).selectOption("Completed");

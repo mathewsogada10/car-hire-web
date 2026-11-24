@@ -9,7 +9,7 @@ Responsive React + TypeScript client for `..\car-hire-backend`. Online-only by d
 - Dashboard and reports: date/vehicle-scoped recognized revenue, collections, outstanding, accrued/paid expenses, expected/cash profit and separate deposit cash. Every card displays its date/calculation basis. Download hire balance CSV.
 - Vehicles: registration/make/model/year, operational status, mileage and correction reason, notes; search, paging, editing and protected tombstone deletion. Record tables keep Open/Delete actions pinned in view, offer keyboard-focusable horizontal scrolling and show a small-screen scrolling hint; form action buttons wrap rather than being clipped on narrow screens.
 - Customers: contact details, optional licence/emergency references and notes. Booking requires a usable contact; incomplete customer records can be prepared first.
-- Hire workspace: one register ordered by planned pickup (earliest first), with search/date filters and a Status selector sourced from the editor: Draft, Booked, Active, Completed and Cancelled. All statuses clears the status filter; filters combine. Includes vehicle/customer selection, planned/actual pickup and return in Nairobi time, status transitions, charges, zero-charge confirmation and itinerary. The backend authoritatively rejects vehicle/service overlaps and orders hires before pagination.
+- Hire workspace: one register ordered by planned pickup (earliest first), with search/date filters and a Status selector sourced from the editor: Draft, Booked, Active, Completed and Cancelled. All statuses clears the status filter; filters combine. Includes vehicle/customer selection, planned/actual pickup and return in the user's timezone, status transitions, charges, zero-charge confirmation and itinerary. The backend authoritatively rejects vehicle/service overlaps and orders hires before pagination.
 - Payments/security deposits: pending/received/failed entries, manual cash/M-Pesa/bank/card references, partial/final payments, refunds linked to originals, deposit applications/refunds. Received entries are immutable; add compensating entries instead.
 - Expenses, owner-defined categories and providers, paid-date tracking and receipt uploads. Maintenance links expenses without double counting.
 - Maintenance service windows and next-due details; odometer/fuel readings; basic pre/post inspection notes; fines/damages with responsibility and charging state.
@@ -18,6 +18,14 @@ Responsive React + TypeScript client for `..\car-hire-backend`. Online-only by d
 - Data management: verified full-snapshot ZIP download, quarantine validation preview, atomic import confirmation, reconciliation results, export history, deliberate safe-storage acknowledgement, reauthentication, scoped purge preview and typed confirmation.
 - Sync/data-health summary and immutable server audit evidence. Android conflicts are resolved in Android; the web currently displays conflict evidence without a dedicated resolution workbench.
 - Grouped vertical desktop sidebar and a labeled **Menu** button on phones/tablets. The menu exposes every section, highlights the current page, keeps **Sign out** visible and provides a scrolling hint. Select a destination to close it, or use Close menu, Escape or the outside area without discarding the current draft. Keyboard focus stays inside the open menu and returns to its trigger on dismissal. There are no horizontally hidden navigation tabs. Labeled inputs, keyboard focus styling, skip link, inert background while signed out, filters and server-side paging. Filter state is represented in the URL.
+
+## Record summaries and calculations
+
+Hires show registration, charge, local planned pickup/return and `Days:X`; payment rows show registration, amount and payment date. Hire selectors show only the local start/end, registration and charge, and retain selected labels while searching. Expense rows include paid date, falling back to business date. Registration searches work for all three registers.
+
+**Filtered total** on Hires, Payments and Expenses sums all matching records across every page using the same server-side search/status/vehicle/date filters. It is not a stored field. Hire totals use agreed charges; payment totals sum displayed entry amounts (including refunds and pending/failed entries), not net cash or outstanding balances. Loading/error states do not present a stale total as current.
+
+The hire form has a read-only **Number of days**, rounding partial elapsed 24-hour days up without recalculating the agreed charge. Missing actual timestamps default to planned timestamps; explicit actual values remain intact. Recording a payment atomically fills missing actual pickup/return on the linked hire without advancing its status. The form explains this behavior before saving.
 
 ## Docker
 
@@ -52,10 +60,10 @@ API records are parsed with Zod before use. `openapi.json` and `src\openapi.d.ts
 - `src\features\reminders`: reminder status UI, polling/notification hook and due-date calculations. `src\features\reports` owns report-loading state.
 - `src\components`: reusable cross-feature UI such as notices.
 - `src\services`: same-origin API, CSRF/session/error handling, runtime Zod record validation, writes/downloads and paginated record loading. Generated OpenAPI types stay in `src\openapi.d.ts`.
-- `src\utilities`: decimal money parsing/display and Nairobi date conversions, with existing unit tests in `inputs.test.ts`.
+- `src\utilities`: decimal money parsing/display and strict browser-local/UTC date conversions, with unit tests in `inputs.test.ts` and `dates.test.ts`.
 - `src\styles`: semantic light/dark palette tokens in `themes.css` and shared layout in `app.css`; `src\types` and feature-local `types.ts` files: shared report and feature contracts.
 
-KES input uses decimal-string parsing into integer minor units, not floating-point multiplication. Nairobi input is converted to UTC independently of the browser's timezone. Defaults: KES, Africa/Nairobi, no turnaround buffer, completed actual-return revenue recognition. Payment/refund cash is separate from charges and refundable deposits. Portable import uses the companion exporters' versioned typed-envelope contract; it is not an arbitrary Excel importer.
+KES input uses decimal-string parsing into integer minor units, not floating-point multiplication. Timestamp display and entry use the browser's timezone without a GMT suffix; storage remains UTC. Invalid/nonexistent local times are rejected. Existing instants retain their original precision and repeated-hour occurrence when left unchanged; ambiguous newly entered local times require an unambiguous time. Business dates, report recognition and reminder scheduling retain Nairobi semantics. Defaults: KES, Africa/Nairobi, no turnaround buffer, completed actual-return revenue recognition. Payment/refund cash is separate from charges and refundable deposits. Portable import uses the companion exporters' versioned typed-envelope contract; it is not an arbitrary Excel importer.
 
 ## Validate
 
@@ -73,7 +81,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-The tests create synthetic business records. Do not run them against your business database. Coverage includes entity/hire/payment/report flow, reminder configuration errors, retained forms after session expiry, export/import and a mobile viewport. Unit tests cover money, Nairobi midnight conversion and malformed server contracts.
+The tests create synthetic business records. Do not run them against your business database. Coverage includes entity/hire/payment/report flow, reminder configuration errors, retained forms after session expiry, export/import, mobile navigation, read-only day counts and actual-time defaults, registration-based references, paid-date fallbacks and filtered totals across pages. Unit tests cover money, browser-local/UTC conversion, daylight-saving gaps/overlaps, precise day rounding and malformed server contracts.
 
 Dependency advisory auditing could not complete in this environment: the configured registry returned HTTP 400 and the public registry connection failed TLS. A clean vulnerability audit is not claimed.
 

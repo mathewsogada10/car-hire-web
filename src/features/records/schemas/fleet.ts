@@ -36,8 +36,8 @@ export const fleetSchemas = {
     fields: [
       vehicle,
       ref("customerId", "Customer", "customers"),
-      f("plannedStart", "Planned pickup (Nairobi)", "instant"),
-      f("plannedEnd", "Planned return (Nairobi)", "instant"),
+      f("plannedStart", "Planned pickup (local time)", "instant"),
+      f("plannedEnd", "Planned return (local time)", "instant"),
       options("status", "Status", [
         "Draft",
         "Booked",
@@ -51,8 +51,8 @@ export const fleetSchemas = {
         "I confirm this is a zero-charge hire",
         "boolean",
       ),
-      f("actualStart", "Actual pickup (Nairobi)", "instant", true),
-      f("actualEnd", "Actual return (Nairobi)", "instant", true),
+      f("actualStart", "Actual pickup (local time)", "instant", true),
+      f("actualEnd", "Actual return (local time)", "instant", true),
       f("itinerary", "Itinerary", "text", true),
       notes,
     ],

@@ -5,6 +5,7 @@ import { RecordsTable } from "../features/records/records-table";
 import { DeleteRecordDialog } from "../features/records/delete-record-dialog";
 import { useEntityRecords } from "../features/records/hooks/use-entity-records";
 import { schemas } from "../features/records/schemas";
+import { displayMoney } from "../utilities/money";
 
 export function EntityPage({ kind }: { kind: string }) {
   const records = useEntityRecords(kind);
@@ -20,6 +21,8 @@ export function EntityPage({ kind }: { kind: string }) {
     page,
     setPage,
     rows,
+    references,
+    amountTotalMinor,
     total,
     error,
     loading,
@@ -70,6 +73,16 @@ export function EntityPage({ kind }: { kind: string }) {
         setPage={setPage}
       />
       <Notice error={error} />
+      {!loading &&
+        !error &&
+        ["hires", "payments", "expenses"].includes(kind) && (
+          <p role="status" data-testid="filtered-total">
+            Filtered total: <strong>{displayMoney(amountTotalMinor)}</strong>{" "}
+            across {total} matching records (all pages).
+            {kind === "payments" &&
+              " Sum of entry amounts, not net cash or balance due."}
+          </p>
+        )}
       {loading ? (
         <p role="status">Loading records...</p>
       ) : rows.length === 0 ? (
@@ -81,6 +94,7 @@ export function EntityPage({ kind }: { kind: string }) {
         <RecordsTable
           kind={kind}
           rows={rows}
+          references={references}
           onEdit={setEditing}
           onDelete={setDeleting}
         />

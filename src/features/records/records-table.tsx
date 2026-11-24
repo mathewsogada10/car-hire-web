@@ -1,33 +1,60 @@
-import { useId } from "react";
+import { useId, useMemo } from "react";
 import type { Row } from "../../services/api";
 import { displayMoney } from "../../utilities/money";
 import { instantInput } from "../../utilities/dates";
 import { schemas } from "./schemas";
+import { registration } from "./record-label";
+import { hireDays } from "./hire-timing";
+import type { Field } from "./types";
 
 export function RecordsTable({
   kind,
   rows,
+  references,
   onEdit,
   onDelete,
 }: {
   kind: string;
   rows: Row[];
+  references: Row[];
   onEdit: (row: Row) => void;
   onDelete: (row: Row) => void;
 }) {
   const hintId = useId();
-  const fields = schemas[kind].fields
-    .filter(
-      (f) =>
-        ![
-          "notes",
-          "zeroChargeConfirmed",
-          "actualStart",
-          "actualEnd",
-          "correctionReason",
-        ].includes(f.key),
-    )
-    .slice(0, 6);
+  const context = useMemo(
+    () => new Map([...references, ...rows].map((row) => [row.id, row])),
+    [references, rows],
+  );
+  const specialFields: Record<string, Field[]> = {
+    hires: [
+      { key: "registration", label: "Registration" },
+      { key: "chargeMinor", label: "Amount", type: "money" },
+      { key: "plannedStart", label: "Planned pickup", type: "instant" },
+      { key: "plannedEnd", label: "Planned return", type: "instant" },
+      { key: "days", label: "Days" },
+    ],
+    payments: [
+      { key: "registration", label: "Registration" },
+      { key: "amountMinor", label: "Amount", type: "money" },
+      { key: "date", label: "Payment date", type: "date" },
+    ],
+  };
+  const fields =
+    specialFields[kind] ??
+    schemas[kind].fields
+      .filter(
+        (f) =>
+          ![
+            "notes",
+            "zeroChargeConfirmed",
+            "actualStart",
+            "actualEnd",
+            "correctionReason",
+          ].includes(f.key),
+      )
+      .slice(0, 6);
+  if (kind === "expenses")
+    fields.push({ key: "paidDate", label: "Paid date", type: "date" });
 
   return (
     <>
@@ -55,13 +82,23 @@ export function RecordsTable({
               <tr key={row.id}>
                 {fields.map((f) => (
                   <td key={f.key}>
-                    {f.type === "money" ? (
+                    {f.key === "registration" && kind !== "vehicles" ? (
+                      registration(row, context)
+                    ) : f.key === "days" ? (
+                      `Days:${hireDays(String(row.data.plannedStart), String(row.data.plannedEnd)) ?? "Not recorded"}`
+                    ) : f.key === "paidDate" ? (
+                      String(
+                        row.data.paidDate || row.data.date || "Not recorded",
+                      )
+                    ) : f.type === "money" ? (
                       displayMoney(Number(row.data[f.key] ?? 0))
                     ) : f.type === "instant" ? (
                       instantInput(String(row.data[f.key] ?? "")).replace(
                         "T",
                         " ",
                       )
+                    ) : f.key === "vehicleId" ? (
+                      registration(row, context)
                     ) : f.reference ? (
                       <span
                         className="record-id"

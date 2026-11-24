@@ -18,6 +18,8 @@ const rowSchema = z.object({
 export type Row = z.infer<typeof rowSchema>;
 export const pageSchema = z.object({
   items: z.array(rowSchema),
+  references: z.array(rowSchema).default([]),
+  amountTotalMinor: z.number().int().safe(),
   total: z.number(),
   page: z.number(),
   size: z.number(),
@@ -108,6 +110,9 @@ export async function list(
   params = new URLSearchParams(),
 ): Promise<Page> {
   return pageSchema.parse(await api<unknown>(`/records/${kind}?${params}`));
+}
+export async function record(kind: string, id: string): Promise<Row> {
+  return rowSchema.parse(await api<unknown>(`/records/${kind}/${id}`));
 }
 export async function save(change: Change) {
   const result = await post<ChangeResult>("/changes", change);

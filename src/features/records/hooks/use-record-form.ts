@@ -6,6 +6,7 @@ import { instantInput, parseInstant } from "../../../utilities/dates";
 import { moneyInput } from "../../../utilities/money";
 import { defaults } from "../defaults";
 import { schemas } from "../schemas";
+import { hireFieldValue, plannedFields } from "../hire-timing";
 
 export function useRecordForm(
   kind: string,
@@ -45,7 +46,8 @@ export function useRecordForm(
     try {
       const data: Data = { ...row?.data };
       for (const f of schemas[kind].fields) {
-        const value = values[f.key];
+        const value =
+          kind === "hires" ? hireFieldValue(values, f.key) : values[f.key];
         if (f.type === "boolean") {
           data[f.key] = Boolean(value);
           continue;
@@ -60,7 +62,11 @@ export function useRecordForm(
           if (!/^\d+$/.test(text) || !Number.isSafeInteger(Number(text)))
             throw new Error(`${f.label} must be a nonnegative whole number.`);
           data[f.key] = Number(text);
-        } else if (f.type === "instant") data[f.key] = parseInstant(text);
+        } else if (f.type === "instant")
+          data[f.key] = parseInstant(
+            text,
+            String(row?.data[f.key] ?? row?.data[plannedFields[f.key]] ?? ""),
+          );
         else data[f.key] = text;
       }
       if (

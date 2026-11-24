@@ -7,8 +7,8 @@ export const operationsSchemas = {
       vehicle,
       name,
       date,
-      f("start", "Service starts (Nairobi)", "instant"),
-      f("end", "Service ends (Nairobi)", "instant"),
+      f("start", "Service starts (local time)", "instant"),
+      f("end", "Service ends (local time)", "instant"),
       ref(
         "expenseId",
         "Linked expense (cost counted only there)",
