@@ -10,8 +10,23 @@
   display: flex;
   flex-wrap: wrap;
   gap: 12px 24px;
-  padding-left: 18px;
+  padding: 0;
+  list-style: none;
   font-size: 0.8rem;
+}
+.chart-legend label {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  min-height: 44px;
+  color: inherit;
+  cursor: pointer;
+}
+.chart-legend input {
+  flex-shrink: 0;
+  color: inherit;
+  accent-color: currentColor;
 }
 .chart-axis {
   fill: var(--text);

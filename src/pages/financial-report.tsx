@@ -1,12 +1,17 @@
+import { useState } from "react";
 import { Notice } from "../components/notice";
 import { displayMoney } from "../utilities/money";
 import { FinancialLineChart } from "../features/reports/financial-line-chart";
 import { ReportVehicleFilter } from "../features/reports/report-vehicle-filter";
 import { useMonthlyReport } from "../features/reports/use-monthly-report";
 import { financialSeries } from "../features/reports/monthly-report";
+import type { FinancialSeriesKey } from "../features/reports/monthly-report";
 import "../styles/financial-report.css";
 
 export function FinancialReport() {
+  const [selectedSeries, setSelectedSeries] = useState<FinancialSeriesKey[]>(
+    () => financialSeries.map((series) => series.key),
+  );
   const { from, setFrom, to, setTo, vehicleId, setVehicle, report, error } =
     useMonthlyReport();
   return (
@@ -49,7 +54,11 @@ export function FinancialReport() {
       {report && (
         <>
           <section className="panel" aria-label="Monthly financial chart">
-            <FinancialLineChart months={report.months} />
+            <FinancialLineChart
+              months={report.months}
+              selectedSeries={selectedSeries}
+              onSelectedSeriesChange={setSelectedSeries}
+            />
           </section>
           <h2>Monthly amounts (KES)</h2>
           <div

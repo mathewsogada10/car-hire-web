@@ -43,3 +43,5 @@ export const financialSeries = [
     dash: "2 4",
   },
 ] as const;
+
+export type FinancialSeriesKey = (typeof financialSeries)[number]["key"];

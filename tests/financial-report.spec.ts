@@ -126,17 +126,51 @@ test("a selected financial year shows twelve reconciled months, refunds, paid ex
   await expect(
     page.getByRole("img", { name: /Monthly financial trend/ }),
   ).toBeVisible();
-  for (const key of [
-    "paymentsReceivedMinor",
-    "expensesPaidMinor",
-    "netProfitMinor",
-  ]) {
+  const lines = [
+    ["paymentsReceivedMinor", "Payments received (net refunds)"],
+    ["expensesPaidMinor", "Paid expenses"],
+    ["netProfitMinor", "Net profit (cash basis)"],
+  ] as const;
+  for (const [key, label] of lines) {
+    await expect(
+      page.getByRole("checkbox", { name: label, exact: true }),
+    ).toBeChecked();
     const points = await page
       .getByTestId(`trend-${key}`)
       .getAttribute("points");
     expect(points?.split(" ")).toHaveLength(12);
     expect(points).not.toContain("NaN");
   }
+  for (const mask of [3, 5, 6, 1, 2, 4, 0, 1]) {
+    for (const [index, [key, label]] of lines.entries()) {
+      const selected = (mask & (1 << index)) !== 0;
+      const checkbox = page.getByRole("checkbox", { name: label, exact: true });
+      await checkbox.setChecked(selected);
+      await expect(checkbox).toBeChecked({ checked: selected });
+      await expect(page.getByTestId(`trend-${key}`)).toHaveCount(
+        selected ? 1 : 0,
+      );
+    }
+    await expect(
+      page.getByText("Select at least one line to display the chart."),
+    ).toHaveCount(mask === 0 ? 1 : 0);
+    await expect(august.locator("td").nth(2)).toHaveText(displayMoney(-300000));
+  }
+  const paymentsCheckbox = page.getByRole("checkbox", {
+    name: lines[0][1],
+    exact: true,
+  });
+  await paymentsCheckbox.focus();
+  await page.keyboard.press("Space");
+  await expect(
+    page.getByRole("img", { name: /Monthly financial trend/ }),
+  ).toHaveCount(0);
+  await page.keyboard.press("Space");
+  await expect(paymentsCheckbox).toBeChecked();
+  const paymentsPoints = (await page
+    .getByTestId("trend-paymentsReceivedMinor")
+    .getAttribute("points"))!;
+  expect(Number(paymentsPoints.split(" ")[1].split(",")[1])).toBe(240);
   const overview = await (
     await page.request.get(
       `/api/v1/reports?from=2035-08-01&to=2035-08-31&vehicleId=${vehicleId}`,
@@ -147,6 +181,9 @@ test("a selected financial year shows twelve reconciled months, refunds, paid ex
   await page.getByLabel("Through", { exact: true }).fill("2035-07-31");
   await expect(table.locator("tbody tr")).toHaveCount(1);
   await expect(table.locator("tbody td").last()).toHaveText(displayMoney(0));
+  await expect(paymentsCheckbox).toBeChecked();
+  await expect(page.getByTestId("trend-expensesPaidMinor")).toHaveCount(0);
+  await expect(page.getByTestId("trend-netProfitMinor")).toHaveCount(0);
   await page.getByLabel("Through", { exact: true }).fill("2035-07-01");
   await expect(page.getByRole("alert")).toContainText(
     "Through on or after From",
