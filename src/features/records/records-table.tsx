@@ -3,7 +3,7 @@ import type { Row } from "../../services/api";
 import { displayMoney } from "../../utilities/money";
 import { instantInput } from "../../utilities/dates";
 import { schemas } from "./schemas";
-import { registration } from "./record-label";
+import { referenceLabel, registration } from "./record-label";
 import { hireDays } from "./hire-timing";
 import type { Field } from "./types";
 
@@ -82,33 +82,30 @@ export function RecordsTable({
               <tr key={row.id}>
                 {fields.map((f) => (
                   <td key={f.key}>
-                    {f.key === "registration" && kind !== "vehicles" ? (
-                      registration(row, context)
-                    ) : f.key === "days" ? (
-                      `Days:${hireDays(String(row.data.plannedStart), String(row.data.plannedEnd)) ?? "Not recorded"}`
-                    ) : f.key === "paidDate" ? (
-                      String(
-                        row.data.paidDate || row.data.date || "Not recorded",
-                      )
-                    ) : f.type === "money" ? (
-                      displayMoney(Number(row.data[f.key] ?? 0))
-                    ) : f.type === "instant" ? (
-                      instantInput(String(row.data[f.key] ?? "")).replace(
-                        "T",
-                        " ",
-                      )
-                    ) : f.key === "vehicleId" ? (
-                      registration(row, context)
-                    ) : f.reference ? (
-                      <span
-                        className="record-id"
-                        title={String(row.data[f.key] ?? "")}
-                      >
-                        {String(row.data[f.key] ?? "").slice(0, 8)}
-                      </span>
-                    ) : (
-                      String(row.data[f.key] ?? "-")
-                    )}
+                    {f.key === "registration" && kind !== "vehicles"
+                      ? registration(row, context)
+                      : f.key === "days"
+                        ? (hireDays(
+                            String(row.data.plannedStart),
+                            String(row.data.plannedEnd),
+                          ) ?? "Not recorded")
+                        : f.key === "paidDate"
+                          ? String(
+                              row.data.paidDate ||
+                                row.data.date ||
+                                "Not recorded",
+                            )
+                          : f.type === "money"
+                            ? displayMoney(Number(row.data[f.key] ?? 0))
+                            : f.type === "instant"
+                              ? instantInput(
+                                  String(row.data[f.key] ?? ""),
+                                ).replace("T", " ")
+                              : f.key === "vehicleId"
+                                ? registration(row, context)
+                                : f.reference
+                                  ? referenceLabel(row.data[f.key], context)
+                                  : String(row.data[f.key] ?? "-")}
                   </td>
                 ))}
                 <td className="record-actions-cell">

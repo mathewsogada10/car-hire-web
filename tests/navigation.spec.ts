@@ -23,6 +23,7 @@ test("phone menu reaches every section and keeps sign out visible", async ({
   const nav = menu.getByRole("navigation", { name: "Main navigation" });
   const titles = await nav.getByRole("button").allTextContents();
   expect(titles).not.toContain("Calendar");
+  expect(titles).not.toContain("Reports");
   expect(titles).toEqual(
     expect.arrayContaining([
       "Customers",
@@ -100,6 +101,29 @@ test("desktop and tablet menus preserve drafts, keyboard dismissal and resize ac
   await expect(
     page.getByRole("button", { name: "Sign out", exact: true }),
   ).toBeInViewport();
+  const collapse = page.getByRole("button", {
+    name: "Collapse navigation menu",
+    exact: true,
+  });
+  const expand = page.getByRole("button", {
+    name: "Expand navigation menu",
+    exact: true,
+  });
+  await expect(collapse).toHaveAttribute("aria-expanded", "true");
+  const expandedWidth = (await page.locator("main").boundingBox())!.width;
+  await collapse.focus();
+  await page.keyboard.press("Enter");
+  await expect(expand).toBeFocused();
+  await expect(expand).toHaveAttribute("aria-expanded", "false");
+  await expect(page.locator(".desktop-sidebar")).toBeHidden();
+  expect((await page.locator("main").boundingBox())!.width).toBeGreaterThan(
+    expandedWidth,
+  );
+  await expect(time).toHaveValue("09:43");
+  await expand.click();
+  await expect(page.locator(".desktop-sidebar")).toBeVisible();
+  await expect(time).toHaveValue("09:43");
+  await collapse.click();
   await page.setViewportSize({ width: 768, height: 600 });
   const trigger = page.getByRole("button", {
     name: "Open navigation menu",
@@ -126,6 +150,9 @@ test("desktop and tablet menus preserve drafts, keyboard dismissal and resize ac
   await page.setViewportSize({ width: 1280, height: 720 });
   await expect(menu).toBeHidden();
   await expect(trigger).toBeHidden();
+  await expect(page.locator(".desktop-sidebar")).toBeHidden();
+  await expect(expand).toBeVisible();
+  await expand.click();
   await expect(
     page
       .getByRole("navigation")

@@ -1,0 +1,45 @@
+.financial-chart {
+  min-width: 0;
+}
+.financial-chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  padding-left: 18px;
+  font-size: 0.8rem;
+}
+.chart-axis {
+  fill: var(--text);
+  font-size: 11px;
+}
+.chart-grid {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+.chart-zero {
+  stroke: var(--text);
+  stroke-opacity: 0.5;
+}
+.trend-payments {
+  color: #2563eb;
+}
+.trend-expenses {
+  color: #c2410c;
+}
+.trend-profit {
+  color: #15803d;
+}
+:root[data-theme="dark"] .trend-payments {
+  color: #60a5fa;
+}
+:root[data-theme="dark"] .trend-expenses {
+  color: #fb923c;
+}
+:root[data-theme="dark"] .trend-profit {
+  color: #4ade80;
+}

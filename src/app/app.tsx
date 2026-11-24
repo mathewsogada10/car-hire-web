@@ -12,6 +12,7 @@ import { useAppearance } from "../features/appearance/use-appearance";
 import type { AppearanceState } from "../features/appearance/appearance";
 import { SettingsPage } from "../pages/settings";
 import { WorkspaceShell } from "./workspace-shell";
+import { FinancialReport } from "../pages/financial-report";
 
 export function App({
   initialAppearance,
@@ -55,8 +56,8 @@ export function App({
           {opened &&
             (view === "dashboard" ? (
               <Dashboard />
-            ) : view === "reports" ? (
-              <Dashboard full />
+            ) : view === "financial" ? (
+              <FinancialReport />
             ) : view === "data" ? (
               <DataManagement />
             ) : view === "audit" ? (

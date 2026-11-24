@@ -1,8 +1,14 @@
 {
   "openapi": "3.1.0",
-  "info": { "title": "OpenAPI definition", "version": "v0" },
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
   "servers": [
-    { "url": "http://127.0.0.1:8080", "description": "Generated server url" }
+    {
+      "url": "http://127.0.0.1:8080",
+      "description": "Generated server url"
+    }
   ],
   "paths": {
     "/api/v1/sync/push": {
@@ -12,7 +18,9 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/Push" }
+              "schema": {
+                "$ref": "#/components/schemas/Push"
+              }
             }
           },
           "required": true
@@ -22,7 +30,10 @@
             "description": "OK",
             "content": {
               "*/*": {
-                "schema": { "type": "object", "additionalProperties": {} }
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
               }
             }
           }
@@ -36,7 +47,9 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/Request" }
+              "schema": {
+                "$ref": "#/components/schemas/Request"
+              }
             }
           },
           "required": true
@@ -46,7 +59,10 @@
             "description": "OK",
             "content": {
               "*/*": {
-                "schema": { "type": "object", "additionalProperties": {} }
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
               }
             }
           }
@@ -60,7 +76,9 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/Confirmation" }
+              "schema": {
+                "$ref": "#/components/schemas/Confirmation"
+              }
             }
           },
           "required": true
@@ -70,7 +88,10 @@
             "description": "OK",
             "content": {
               "*/*": {
-                "schema": { "type": "object", "additionalProperties": {} }
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
               }
             }
           }
@@ -86,13 +107,19 @@
             "name": "commit",
             "in": "query",
             "required": false,
-            "schema": { "type": "boolean", "default": false }
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
           },
           {
             "name": "packageHash",
             "in": "query",
             "required": false,
-            "schema": { "type": "string", "default": "" }
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
           }
         ],
         "requestBody": {
@@ -101,7 +128,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "file": { "type": "string", "format": "binary" }
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
                 },
                 "required": ["file"]
               }
@@ -113,7 +143,10 @@
             "description": "OK",
             "content": {
               "*/*": {
-                "schema": { "type": "object", "additionalProperties": {} }
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
               }
             }
           }
@@ -131,7 +164,10 @@
               "*/*": {
                 "schema": {
                   "type": "array",
-                  "items": { "type": "object", "additionalProperties": {} }
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": {}
+                  }
                 }
               }
             }
@@ -146,14 +182,22 @@
             "name": "includeAttachments",
             "in": "query",
             "required": false,
-            "schema": { "type": "boolean", "default": false }
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "type": "string", "format": "byte" } }
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
             }
           }
         }
@@ -168,7 +212,10 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "requestBody": {
@@ -176,13 +223,19 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "additionalProperties": { "type": "string" }
+                "additionalProperties": {
+                  "type": "string"
+                }
               }
             }
           },
           "required": true
         },
-        "responses": { "200": { "description": "OK" } }
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
       }
     },
     "/api/v1/changes": {
@@ -192,7 +245,9 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/Change" }
+              "schema": {
+                "$ref": "#/components/schemas/Change"
+              }
             }
           },
           "required": true
@@ -202,7 +257,10 @@
             "description": "OK",
             "content": {
               "*/*": {
-                "schema": { "type": "object", "additionalProperties": {} }
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
               }
             }
           }
@@ -218,13 +276,19 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "additionalProperties": { "type": "string" }
+                "additionalProperties": {
+                  "type": "string"
+                }
               }
             }
           },
           "required": true
         },
-        "responses": { "200": { "description": "OK" } }
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
       }
     },
     "/api/v1/attachments": {
@@ -236,7 +300,10 @@
             "name": "parentId",
             "in": "query",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
@@ -246,7 +313,10 @@
               "*/*": {
                 "schema": {
                   "type": "array",
-                  "items": { "type": "object", "additionalProperties": {} }
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": {}
+                  }
                 }
               }
             }
@@ -261,13 +331,19 @@
             "name": "parentId",
             "in": "query",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           },
           {
             "name": "id",
             "in": "query",
             "required": false,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "requestBody": {
@@ -276,7 +352,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "file": { "type": "string", "format": "binary" }
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
                 },
                 "required": ["file"]
               }
@@ -288,7 +367,10 @@
             "description": "OK",
             "content": {
               "*/*": {
-                "schema": { "type": "object", "additionalProperties": {} }
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
               }
             }
           }
@@ -304,7 +386,10 @@
             "description": "OK",
             "content": {
               "*/*": {
-                "schema": { "type": "object", "additionalProperties": {} }
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
               }
             }
           }
@@ -320,13 +405,20 @@
             "name": "cursor",
             "in": "query",
             "required": false,
-            "schema": { "type": "string", "default": "" }
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
           },
           {
             "name": "limit",
             "in": "query",
             "required": false,
-            "schema": { "type": "integer", "format": "int32", "default": 100 }
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 100
+            }
           }
         ],
         "responses": {
@@ -334,7 +426,10 @@
             "description": "OK",
             "content": {
               "*/*": {
-                "schema": { "type": "object", "additionalProperties": {} }
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
               }
             }
           }
@@ -350,19 +445,28 @@
             "name": "from",
             "in": "query",
             "required": true,
-            "schema": { "type": "string", "format": "date" }
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
           },
           {
             "name": "to",
             "in": "query",
             "required": true,
-            "schema": { "type": "string", "format": "date" }
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
           },
           {
             "name": "vehicleId",
             "in": "query",
             "required": false,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
@@ -370,7 +474,57 @@
             "description": "OK",
             "content": {
               "*/*": {
-                "schema": { "type": "object", "additionalProperties": {} }
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/reports/monthly": {
+      "get": {
+        "tags": ["report-controller"],
+        "operationId": "monthly",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "vehicleId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MonthlyFinancialReport"
+                }
               }
             }
           }
@@ -386,25 +540,40 @@
             "name": "from",
             "in": "query",
             "required": true,
-            "schema": { "type": "string", "format": "date" }
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
           },
           {
             "name": "to",
             "in": "query",
             "required": true,
-            "schema": { "type": "string", "format": "date" }
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
           },
           {
             "name": "vehicleId",
             "in": "query",
             "required": false,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": { "text/csv": { "schema": { "type": "string" } } }
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       }
@@ -418,49 +587,74 @@
             "name": "kind",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "page",
             "in": "query",
             "required": false,
-            "schema": { "type": "integer", "format": "int32", "default": 0 }
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
           },
           {
             "name": "size",
             "in": "query",
             "required": false,
-            "schema": { "type": "integer", "format": "int32", "default": 50 }
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
           },
           {
             "name": "q",
             "in": "query",
             "required": false,
-            "schema": { "type": "string", "default": "" }
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
           },
           {
             "name": "status",
             "in": "query",
             "required": false,
-            "schema": { "type": "string", "default": "" }
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
           },
           {
             "name": "vehicleId",
             "in": "query",
             "required": false,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           },
           {
             "name": "from",
             "in": "query",
             "required": false,
-            "schema": { "type": "string", "default": "" }
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
           },
           {
             "name": "to",
             "in": "query",
             "required": false,
-            "schema": { "type": "string", "default": "" }
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
           }
         ],
         "responses": {
@@ -468,7 +662,10 @@
             "description": "OK",
             "content": {
               "*/*": {
-                "schema": { "type": "object", "additionalProperties": {} }
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
               }
             }
           }
@@ -484,20 +681,29 @@
             "name": "kind",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "$ref": "#/components/schemas/Row" } }
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/Row"
+                }
+              }
             }
           }
         }
@@ -512,7 +718,10 @@
             "description": "OK",
             "content": {
               "*/*": {
-                "schema": { "type": "object", "additionalProperties": {} }
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
               }
             }
           }
@@ -530,7 +739,9 @@
               "*/*": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": { "type": "string" }
+                  "additionalProperties": {
+                    "type": "string"
+                  }
                 }
               }
             }
@@ -547,7 +758,9 @@
             "name": "token",
             "in": "query",
             "required": true,
-            "schema": { "$ref": "#/components/schemas/CsrfToken" }
+            "schema": {
+              "$ref": "#/components/schemas/CsrfToken"
+            }
           }
         ],
         "responses": {
@@ -557,7 +770,9 @@
               "*/*": {
                 "schema": {
                   "type": "object",
-                  "additionalProperties": { "type": "string" }
+                  "additionalProperties": {
+                    "type": "string"
+                  }
                 }
               }
             }
@@ -574,7 +789,11 @@
             "name": "page",
             "in": "query",
             "required": false,
-            "schema": { "type": "integer", "format": "int32", "default": 0 }
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
           }
         ],
         "responses": {
@@ -584,7 +803,10 @@
               "*/*": {
                 "schema": {
                   "type": "array",
-                  "items": { "type": "object", "additionalProperties": {} }
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": {}
+                  }
                 }
               }
             }
@@ -601,14 +823,22 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": { "type": "string", "format": "uuid" }
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "*/*": { "schema": { "type": "string", "format": "byte" } }
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
             }
           }
         }
@@ -623,7 +853,11 @@
             "name": "after",
             "in": "query",
             "required": false,
-            "schema": { "type": "integer", "format": "int64", "default": 0 }
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 0
+            }
           }
         ],
         "responses": {
@@ -631,7 +865,10 @@
             "description": "OK",
             "content": {
               "*/*": {
-                "schema": { "type": "object", "additionalProperties": {} }
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {}
+                }
               }
             }
           }
@@ -644,13 +881,31 @@
       "Change": {
         "type": "object",
         "properties": {
-          "operationId": { "type": "string", "format": "uuid" },
-          "id": { "type": "string", "format": "uuid" },
-          "kind": { "type": "string" },
-          "baseRevision": { "type": "integer", "format": "int64" },
-          "data": { "type": "object", "additionalProperties": true },
-          "deleted": { "type": "boolean" },
-          "reason": { "type": "string" }
+          "operationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "baseRevision": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "data": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "deleted": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": "string"
+          }
         },
         "required": [
           "baseRevision",
@@ -666,44 +921,128 @@
         "properties": {
           "operations": {
             "type": "array",
-            "items": { "$ref": "#/components/schemas/Change" }
+            "items": {
+              "$ref": "#/components/schemas/Change"
+            }
           },
-          "installationId": { "type": "string" }
+          "installationId": {
+            "type": "string"
+          }
         }
       },
       "Request": {
         "type": "object",
         "properties": {
-          "exportBatchId": { "type": "string", "format": "uuid" },
-          "through": { "type": "string", "format": "date" }
+          "exportBatchId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "through": {
+            "type": "string",
+            "format": "date"
+          }
         }
       },
       "Confirmation": {
         "type": "object",
         "properties": {
-          "scope": { "$ref": "#/components/schemas/Request" },
-          "previewHash": { "type": "string" },
-          "confirmation": { "type": "string" }
+          "scope": {
+            "$ref": "#/components/schemas/Request"
+          },
+          "previewHash": {
+            "type": "string"
+          },
+          "confirmation": {
+            "type": "string"
+          }
+        }
+      },
+      "FinancialMonth": {
+        "type": "object",
+        "properties": {
+          "month": {
+            "type": "string"
+          },
+          "paymentsReceivedMinor": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "expensesPaidMinor": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "netProfitMinor": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "MonthlyFinancialReport": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date"
+          },
+          "to": {
+            "type": "string",
+            "format": "date"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "months": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancialMonth"
+            }
+          }
         }
       },
       "Row": {
         "type": "object",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "kind": { "type": "string" },
-          "revision": { "type": "integer", "format": "int64" },
-          "data": { "type": "object", "additionalProperties": true },
-          "createdAt": { "type": "string", "format": "date-time" },
-          "updatedAt": { "type": "string", "format": "date-time" },
-          "deletedAt": { "type": "string", "format": "date-time" }
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "revision": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "data": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
         }
       },
       "CsrfToken": {
         "type": "object",
         "properties": {
-          "parameterName": { "type": "string" },
-          "token": { "type": "string" },
-          "headerName": { "type": "string" }
+          "headerName": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          },
+          "parameterName": {
+            "type": "string"
+          }
         }
       }
     }

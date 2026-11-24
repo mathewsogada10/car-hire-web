@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { list, message, save } from "../../../services/api";
 import type { Row } from "../../../services/api";
+import { recordContext } from "../../../services/record-context";
+import { schemas } from "../schemas";
 
 export function useEntityRecords(kind: string) {
   const initial = new URLSearchParams(location.search);
@@ -43,10 +45,29 @@ export function useEntityRecords(kind: string) {
     });
     const timer = setTimeout(() => {
       list(kind, params)
-        .then((result) => {
+        .then(async (result) => {
+          if (!active) return;
+          const references =
+            kind === "expenses"
+              ? await recordContext(
+                  result.items.flatMap((row) =>
+                    schemas.expenses.fields.flatMap((field) =>
+                      field.reference && row.data[field.key]
+                        ? [
+                            {
+                              kind: field.reference,
+                              id: String(row.data[field.key]),
+                            },
+                          ]
+                        : [],
+                    ),
+                  ),
+                  result.references,
+                )
+              : result.references;
           if (active) {
             setRows(result.items);
-            setReferences(result.references);
+            setReferences(references);
             setAmountTotalMinor(result.amountTotalMinor);
             setTotal(result.total);
             setError("");

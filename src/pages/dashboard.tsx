@@ -2,24 +2,32 @@ import { download, message } from "../services/api";
 import { Notice } from "../components/notice";
 import { displayMoney } from "../utilities/money";
 import { useReport } from "../features/reports/use-report";
+import { ReportVehicleFilter } from "../features/reports/report-vehicle-filter";
+import { label } from "../features/records/record-label";
+import { useMemo } from "react";
 
-export function Dashboard({ full = false }: { full?: boolean }) {
+export function Dashboard() {
   const {
     from,
     setFrom,
     to,
     setTo,
     report,
+    references,
     vehicleId,
     setVehicle,
     error,
     setError,
     params,
   } = useReport();
+  const context = useMemo(
+    () => new Map(references.map((row) => [row.id, row])),
+    [references],
+  );
   return (
     <>
       <p className="eyebrow">YOUR BUSINESS, CLEARLY</p>
-      <h1>{full ? "Financial reports" : "Fleet overview"}</h1>
+      <h1>Fleet overview</h1>
       <p className="muted">
         KES | Africa/Nairobi | Revenue and cash are deliberately separate.
       </p>
@@ -40,16 +48,10 @@ export function Dashboard({ full = false }: { full?: boolean }) {
             onChange={(e) => setTo(e.target.value)}
           />
         </label>
-        <label>
-          Vehicle UUID (optional)
-          <input
-            value={vehicleId}
-            onChange={(e) => setVehicle(e.target.value)}
-            placeholder="All vehicles"
-          />
-        </label>
+        <ReportVehicleFilter value={vehicleId} onChange={setVehicle} />
       </div>
       <Notice error={error} />
+      {!report && !error && <p role="status">Loading overview...</p>}
       {report && (
         <>
           <div className="cards">
@@ -116,22 +118,34 @@ export function Dashboard({ full = false }: { full?: boolean }) {
               </button>
             </div>
             {report.balances.length ? (
-              <table>
-                <thead>
-                  <tr>
-                    <th>Hire</th>
-                    <th>Outstanding (KES)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {report.balances.map((b) => (
-                    <tr key={b.hireId}>
-                      <td>{b.hireId}</td>
-                      <td>{displayMoney(b.outstandingMinor)}</td>
+              <div
+                className="table-wrap"
+                role="region"
+                aria-label="Hire balances"
+                tabIndex={0}
+              >
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Hire</th>
+                      <th>Outstanding (KES)</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {report.balances.map((b) => {
+                      const hire = context.get(b.hireId);
+                      return (
+                        <tr key={b.hireId}>
+                          <td>
+                            {hire ? label(hire, context) : "Hire unavailable"}
+                          </td>
+                          <td>{displayMoney(b.outstandingMinor)}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             ) : (
               <p>No hire balances in this period.</p>
             )}

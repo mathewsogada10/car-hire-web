@@ -11,5 +11,9 @@ export async function allRecords(kind: string) {
     );
     result.push(...current.items);
     if (result.length >= current.total) return result;
+    if (!current.items.length)
+      throw new Error(
+        `Unable to load all ${kind} records. Reload the page to retry.`,
+      );
   }
 }

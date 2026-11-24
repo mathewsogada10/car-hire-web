@@ -5,7 +5,7 @@ export const navigationGroups = [
     title: "Overview",
     items: [
       ["dashboard", "Overview"],
-      ["reports", "Reports"],
+      ["financial", "Financial report"],
     ],
   },
   {

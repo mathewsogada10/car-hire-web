@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { api, message } from "../services/api";
 
+function currentView() {
+  const view = new URLSearchParams(location.search).get("view");
+  return view === "reports" ? "dashboard" : (view ?? "dashboard");
+}
+
 export function useWorkspace() {
-  const [view, setView] = useState(
-    new URLSearchParams(location.search).get("view") ?? "dashboard",
-  );
+  const [view, setView] = useState(currentView);
   const [authenticated, setAuthenticated] = useState(false);
   const [opened, setOpened] = useState(false);
   const [checked, setChecked] = useState(false);
@@ -21,8 +24,7 @@ export function useWorkspace() {
       })
       .finally(() => setChecked(true));
     const expired = () => setAuthenticated(false);
-    const pop = () =>
-      setView(new URLSearchParams(location.search).get("view") ?? "dashboard");
+    const pop = () => setView(currentView());
     window.addEventListener("session-expired", expired);
     window.addEventListener("popstate", pop);
     return () => {

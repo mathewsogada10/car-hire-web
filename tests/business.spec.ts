@@ -20,11 +20,6 @@ test("creates vehicle and customer, completes hire and reconciles cash vs revenu
   await expect(
     page.getByRole("cell", { name: registration, exact: true }),
   ).toBeVisible();
-  const vehicles = await page.request.get(
-    `/api/v1/records/vehicles?q=${registration}`,
-  );
-  const vehiclePage: { items: { id: string }[] } = await vehicles.json();
-  const vehicleId = vehiclePage.items[0].id;
   await navigate(page, "Customers");
   await page.getByRole("button", { name: "+ Add record" }).click();
   await page.getByLabel("Name", { exact: true }).fill(`Customer ${suffix}`);
@@ -85,8 +80,8 @@ test("creates vehicle and customer, completes hire and reconciles cash vs revenu
   ).toBeVisible();
   await navigate(page, "Overview");
   await page
-    .getByLabel("Vehicle UUID (optional)", { exact: true })
-    .fill(vehicleId);
+    .getByLabel("Search vehicle", { exact: true })
+    .selectOption({ label: registration });
   await page.getByLabel("From", { exact: true }).fill("2026-01-01");
   await page.getByLabel("Through", { exact: true }).fill("2026-01-31");
   await expect(

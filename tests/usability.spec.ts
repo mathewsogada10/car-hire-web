@@ -86,7 +86,7 @@ test("registrations, day counts, paid dates and filtered totals stay coherent ac
   await expect(total).toContainText("2,600.00");
   await expect(total).toContainText("26 matching records");
   await expect(
-    page.getByRole("cell", { name: "Days:1", exact: true }).first(),
+    page.getByRole("cell", { name: "1", exact: true }).first(),
   ).toBeVisible();
   await page.getByRole("button", { name: "Next", exact: true }).click();
   await expect(page.locator("tbody tr")).toHaveCount(1);

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { api, message } from "../../services/api";
 import type { Report } from "../../types/reports";
+import type { Row } from "../../services/api";
+import { recordContext } from "../../services/record-context";
 
 export function useReport() {
   const [today] = useState(() =>
@@ -8,7 +10,7 @@ export function useReport() {
   );
   const [from, setFrom] = useState(`${today.slice(0, 4)}-01-01`);
   const [to, setTo] = useState(today);
-  const [report, setReport] = useState<Report>();
+  const [result, setResult] = useState<{ report: Report; references: Row[] }>();
   const [vehicleId, setVehicle] = useState("");
   const [error, setError] = useState("");
   const params = new URLSearchParams({
@@ -18,10 +20,19 @@ export function useReport() {
   }).toString();
   useEffect(() => {
     let active = true;
+    setResult(undefined);
+    setError("");
     api<Report>(`/reports?${params}`)
-      .then((r) => {
+      .then(async (report) => {
+        if (!active) return;
+        const references = await recordContext(
+          report.balances.map((balance) => ({
+            kind: "hires",
+            id: balance.hireId,
+          })),
+        );
         if (active) {
-          setReport(r);
+          setResult({ report, references });
           setError("");
         }
       })
@@ -37,7 +48,8 @@ export function useReport() {
     setFrom,
     to,
     setTo,
-    report,
+    report: result?.report,
+    references: result?.references ?? [],
     vehicleId,
     setVehicle,
     error,

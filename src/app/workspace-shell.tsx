@@ -19,6 +19,7 @@ export function WorkspaceShell({
   children,
 }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
   const expanded = authenticated && menuOpen;
 
@@ -56,7 +57,12 @@ export function WorkspaceShell({
   const navigation = { view, onNavigate: navigate, onSignOut: signOut };
   return (
     <>
-      <aside className="desktop-sidebar" inert={!authenticated}>
+      <aside
+        id="workspace-sidebar"
+        className="desktop-sidebar"
+        hidden={sidebarCollapsed}
+        inert={!authenticated}
+      >
         <NavigationContent {...navigation} />
       </aside>
       <dialog
@@ -71,8 +77,42 @@ export function WorkspaceShell({
       >
         <NavigationContent {...navigation} onClose={() => setMenuOpen(false)} />
       </dialog>
-      <main id="workspace" inert={!authenticated}>
+      <main
+        id="workspace"
+        className={sidebarCollapsed ? "sidebar-collapsed" : undefined}
+        inert={!authenticated}
+      >
         <header>
+          <button
+            className="quiet sidebar-toggle"
+            aria-label={
+              sidebarCollapsed
+                ? "Expand navigation menu"
+                : "Collapse navigation menu"
+            }
+            aria-controls="workspace-sidebar"
+            aria-expanded={!sidebarCollapsed}
+            onClick={() => setSidebarCollapsed((collapsed) => !collapsed)}
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
+            >
+              <path
+                d={
+                  sidebarCollapsed
+                    ? "M4 4v16m5-14 6 6-6 6"
+                    : "M4 4v16m11-14-6 6 6 6"
+                }
+              />
+            </svg>
+            {sidebarCollapsed ? "Expand menu" : "Collapse menu"}
+          </button>
           <button
             className="quiet navigation-toggle"
             aria-label="Open navigation menu"

@@ -78,7 +78,7 @@ it("hire choices and payment registration resolve related rows without exposing 
     [hire.id, hire],
   ]);
   expect(label(hire, references)).toBe(
-    `2026-12-01 10:00 - 2026-12-02 12:00 | KAA 123A | ${displayMoney(250000)}`,
+    `KAA 123A | 2026-12-01 10:00 - 2026-12-02 12:00 | ${displayMoney(250000)}`,
   );
   expect(
     registration(

@@ -64,6 +64,9 @@ button.danger:not(.quiet) {
   color: var(--sidebar-text);
   z-index: 5;
 }
+.desktop-sidebar[hidden] {
+  display: none;
+}
 .navigation-content {
   height: 100%;
   min-height: 0;
@@ -73,11 +76,17 @@ button.danger:not(.quiet) {
   display: flex;
   flex-direction: column;
 }
-.navigation-toggle {
-  display: none;
+.navigation-toggle,
+.sidebar-toggle {
   align-items: center;
   gap: 8px;
   flex-shrink: 0;
+}
+.navigation-toggle {
+  display: none;
+}
+.sidebar-toggle {
+  display: inline-flex;
 }
 .navigation-drawer {
   position: fixed;
@@ -179,6 +188,9 @@ nav button[aria-current="page"] {
 main {
   margin-left: 242px;
 }
+main.sidebar-collapsed {
+  margin-left: 0;
+}
 header {
   height: 72px;
   background: var(--surface);
@@ -231,6 +243,7 @@ h3 {
 }
 .section-head {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   gap: 20px;
@@ -247,9 +260,10 @@ h3 {
   align-items: end;
   margin: 25px 0;
 }
-.filters label {
-  flex: 1;
-  min-width: 140px;
+.filters > label,
+.report-vehicle-filter {
+  flex: 1 1 180px;
+  min-width: 0;
 }
 label {
   display: flex;
@@ -282,7 +296,7 @@ textarea {
 }
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
   gap: 18px;
   margin: 24px 0;
 }
@@ -296,6 +310,7 @@ textarea {
   padding: 24px;
 }
 .card {
+  min-width: 0;
   border-top: 3px solid var(--accent);
   display: flex;
   flex-direction: column;
@@ -306,6 +321,7 @@ textarea {
   color: var(--muted);
 }
 .card strong {
+  overflow-wrap: anywhere;
   font-size: 1.6rem;
   letter-spacing: -0.04em;
 }
@@ -370,6 +386,7 @@ tr:hover td {
 }
 .pagination {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 10px;
   margin-top: 20px;
@@ -380,7 +397,7 @@ tr:hover td {
 }
 .form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0 22px;
 }
 .wide {
@@ -393,6 +410,7 @@ tr:hover td {
 }
 .actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
   margin: 22px 0 0;
 }
@@ -423,6 +441,8 @@ tr:hover td {
 }
 .dialog {
   width: min(460px, 100%);
+  max-height: calc(100dvh - 40px);
+  overflow-y: auto;
   background: var(--surface);
   padding: 35px;
   border-radius: 15px;
@@ -476,6 +496,9 @@ hr {
   .desktop-sidebar {
     display: none;
   }
+  .sidebar-toggle {
+    display: none;
+  }
   .navigation-toggle {
     display: inline-flex;
   }
@@ -514,7 +537,7 @@ hr {
     font-size: 1.65rem;
   }
   .cards {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
     gap: 10px;
   }
   .card {
@@ -525,12 +548,6 @@ hr {
   }
   .section-head {
     align-items: flex-start;
-    flex-wrap: wrap;
-  }
-  .actions {
-    flex-wrap: wrap;
-  }
-  .pagination {
     flex-wrap: wrap;
   }
   .dialog {

@@ -1,4 +1,4 @@
-import type { Data } from "../../services/api";
+import type { Data, Value } from "../../services/api";
 import { displayInstant } from "../../utilities/dates";
 import { displayMoney } from "../../utilities/money";
 
@@ -25,9 +25,18 @@ export function label(
     row.data.registration ??
       row.data.name ??
       (row.kind === "hires"
-        ? `${displayInstant(row.data.plannedStart)} - ${displayInstant(row.data.plannedEnd)} | ${registration(row, references)} | ${displayMoney(Number(row.data.chargeMinor ?? 0))}`
+        ? `${registration(row, references)} | ${displayInstant(row.data.plannedStart)} - ${displayInstant(row.data.plannedEnd)} | ${displayMoney(Number(row.data.chargeMinor ?? 0))}`
         : row.data.date
           ? `${row.data.date} | ${row.id.slice(0, 8)}`
           : row.id.slice(0, 8)),
   );
+}
+
+export function referenceLabel(
+  value: Value | undefined,
+  references: RecordReferences,
+): string {
+  if (!value) return "-";
+  const row = references.get(String(value));
+  return row ? label(row, references) : String(value).slice(0, 8);
 }

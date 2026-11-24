@@ -196,6 +196,22 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/v1/reports/monthly": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["monthly"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/v1/reports/balances.csv": {
     parameters: {
       query?: never;
@@ -373,6 +389,23 @@ export interface components {
       previewHash?: string;
       confirmation?: string;
     };
+    FinancialMonth: {
+      month?: string;
+      /** Format: int64 */
+      paymentsReceivedMinor?: number;
+      /** Format: int64 */
+      expensesPaidMinor?: number;
+      /** Format: int64 */
+      netProfitMinor?: number;
+    };
+    MonthlyFinancialReport: {
+      /** Format: date */
+      from?: string;
+      /** Format: date */
+      to?: string;
+      currency?: string;
+      months?: components["schemas"]["FinancialMonth"][];
+    };
     Row: {
       /** Format: uuid */
       id?: string;
@@ -390,9 +423,9 @@ export interface components {
       deletedAt?: string;
     };
     CsrfToken: {
-      parameterName?: string;
-      token?: string;
       headerName?: string;
+      token?: string;
+      parameterName?: string;
     };
   };
   responses: never;
@@ -758,6 +791,30 @@ export interface operations {
           "*/*": {
             [key: string]: unknown;
           };
+        };
+      };
+    };
+  };
+  monthly: {
+    parameters: {
+      query: {
+        from: string;
+        to: string;
+        vehicleId?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["MonthlyFinancialReport"];
         };
       };
     };
