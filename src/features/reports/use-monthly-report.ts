@@ -10,10 +10,19 @@ export function useMonthlyReport() {
   const [from, setFrom] = useState(`${today.slice(0, 4)}-01-01`);
   const [to, setTo] = useState(today);
   const [vehicleId, setVehicle] = useState("");
-  const [report, setReport] = useState<MonthlyReport>();
+  const [result, setResult] = useState<{
+    params: string;
+    report: MonthlyReport;
+  }>();
   const [error, setError] = useState("");
+  const params = new URLSearchParams({
+    from,
+    to,
+    ...(vehicleId ? { vehicleId } : {}),
+  }).toString();
+  const report = result?.params === params ? result.report : undefined;
   useEffect(() => {
-    setReport(undefined);
+    setResult(undefined);
     setError("");
     if (!from || !to || to < from) {
       setError("Enter both dates with Through on or after From.");
@@ -21,15 +30,11 @@ export function useMonthlyReport() {
     }
     let active = true;
     const controller = new AbortController();
-    const params = new URLSearchParams({
-      from,
-      to,
-      ...(vehicleId ? { vehicleId } : {}),
-    });
     const timer = setTimeout(() => {
       api<unknown>(`/reports/monthly?${params}`, { signal: controller.signal })
         .then((value) => {
-          if (active) setReport(monthlyReportSchema.parse(value));
+          if (active)
+            setResult({ params, report: monthlyReportSchema.parse(value) });
         })
         .catch((e) => {
           if (active) setError(message(e));
@@ -40,6 +45,6 @@ export function useMonthlyReport() {
       clearTimeout(timer);
       controller.abort();
     };
-  }, [from, to, vehicleId]);
+  }, [from, to, params]);
   return { from, setFrom, to, setTo, vehicleId, setVehicle, report, error };
 }

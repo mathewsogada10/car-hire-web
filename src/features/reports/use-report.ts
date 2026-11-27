@@ -10,7 +10,11 @@ export function useReport() {
   );
   const [from, setFrom] = useState(`${today.slice(0, 4)}-01-01`);
   const [to, setTo] = useState(today);
-  const [result, setResult] = useState<{ report: Report; references: Row[] }>();
+  const [result, setResult] = useState<{
+    params: string;
+    report: Report;
+    references: Row[];
+  }>();
   const [vehicleId, setVehicle] = useState("");
   const [error, setError] = useState("");
   const params = new URLSearchParams({
@@ -18,6 +22,7 @@ export function useReport() {
     to,
     ...(vehicleId ? { vehicleId } : {}),
   }).toString();
+  const current = result?.params === params ? result : undefined;
   useEffect(() => {
     let active = true;
     setResult(undefined);
@@ -32,7 +37,7 @@ export function useReport() {
           })),
         );
         if (active) {
-          setResult({ report, references });
+          setResult({ params, report, references });
           setError("");
         }
       })
@@ -48,8 +53,8 @@ export function useReport() {
     setFrom,
     to,
     setTo,
-    report: result?.report,
-    references: result?.references ?? [],
+    report: current?.report,
+    references: current?.references ?? [],
     vehicleId,
     setVehicle,
     error,
